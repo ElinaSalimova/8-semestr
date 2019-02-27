@@ -126,7 +126,7 @@ $(document).ready(function () {
 <div id="--1" class="section level2">
 <h2>Лабораторная работа №1</h2>
 <p>Соберем данные о телевизорах с Яндекс маркета.</p>
-<p>В качестве определяющих признаков были взяты: название, описание, цена, количество отзывов, количество предложений, количество человек, купивших товар, последний отзыв</p>
+<p>В качестве определяющих признаков были взяты: название, описание, цена, количество отзывов, количество предложений, последний отзыв</p>
 <p>Загрузим библиотеку и введем необходимые функции.</p>
 <pre class="r"><code>library('rvest') </code></pre>
 <pre><code>## Warning: package 'rvest' was built under R version 3.4.4</code></pre>
@@ -222,7 +222,7 @@ counto_data &lt;- as.numeric(counto_data)</code></pre>
 length(countp_data)</code></pre>
 <pre><code>## [1] 48</code></pre>
 <pre class="r"><code>head(countp_data)</code></pre>
-<pre><code>## [1] &quot;77 предложений&quot; &quot;70 предложений&quot; &quot;81 предложение&quot; &quot;14 предложений&quot;
+<pre><code>## [1] &quot;77 предложений&quot; &quot;71 предложение&quot; &quot;81 предложение&quot; &quot;14 предложений&quot;
 ## [5] &quot;8 предложений&quot;  &quot;82 предложения&quot;</code></pre>
 <pre class="r"><code>countp_data &lt;- gsub( '\\W','', countp_data)
 countp_data &lt;- as.numeric(countp_data)</code></pre>
@@ -276,7 +276,7 @@ dim(DF_TV)</code></pre>
 ##  $ Price       : num  15290 25590 14500 12913 8990 ...
 ##  $ Stars       : num  4.5 4.5 4.5 4 4.5 4.5 4.5 5 4.5 4.5 ...
 ##  $ Counto      : num  10 25 41 17 56 9 25 4 17 17 ...
-##  $ Countp      : num  77 70 81 14 8 82 69 25 52 74 ...
+##  $ Countp      : num  77 71 81 14 8 82 69 25 52 75 ...
 ##  $ Lasto       : chr  &quot;Узкие рамки дисплея, молниеносно включается, картинка отличная, звук хороший, настроить проще простого, на ножк&quot;| __truncated__ &quot;Хороший телек за свои деньги. Был выбор между монитором  LG 27UK650 и этим телеком для использования как монито&quot;| __truncated__ &quot;Модель телевизора LG 32LJ500V стоит своих денег. \nУдобно слушать радио с отключенным экраном, есть такая функция....&quot; &quot;Телевизор хорош за свои деньги , программное обеспечение не из лучших.Но за такие деньги 13990 которые я взял э&quot;| __truncated__ ...</code></pre>
 <pre class="r"><code># записываем в .csv
 write.csv(DF_TV, file = 'TV_Ya.Market.csv', row.names = F)</code></pre>
