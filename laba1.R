@@ -22,12 +22,19 @@ head(name_data)
 # Описание 
 # Описание1
 description1_data <- html_nodes(webpage,'div.n-snippet-card2__content > ul> li:nth-child(1)') %>% html_text
+description_TVTYPE_data <- gsub( '[, ].*$','', description1_data)
+description_def_data <- gsub( '.*[,]','', description1_data)
 length(description1_data)
 head(description1_data)
+head(description_TVTYPE_data) 
+head(description_def_data)
 # Описание2
 description2_data <- html_nodes(webpage,'div.n-snippet-card2__content > ul> li:nth-child(2)') %>% html_text
+description2_data <- gsub('["].*$','', description2_data)
+description22_data <- gsub('.*[ ]','', description2_data)
 length(description2_data)
 head(description2_data)
+head(description22_data)
 # Описание3
 description3_data <- html_nodes(webpage,'div.n-snippet-card2__content > ul> li:nth-child(3)') %>% html_text
 length(description3_data)
@@ -83,8 +90,9 @@ length(lasto_data)
 head(lasto_data)
 
 # совмещаем данные в один фрейм
-DF_TV <- data.frame(Name = name_data, Description1 = description1_data,
-                          Description2 = description2_data, Description3 = description3_data,
+DF_TV <- data.frame(Name = name_data, Description0 = description_TVTYPE_data,
+                          Description1 = description_def_data,
+                          Description2 = description22_data, Description3 = description3_data,
                           Price = price_data, Stars = stars_data, Counto = counto_data,
                           Countp = countp_data, 
                           Lasto = lasto_data,
