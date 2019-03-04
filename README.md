@@ -12,7 +12,7 @@ TV_Ya.Market.csv - csv-файл получившегося.
 
 название = "Name"
 
-описание1 = Description 0 - тип телевизора, Description 1 - разрешение
+описание1 = 'Description 0' - тип телевизора, Description 1 - разрешение
 
 описание2 = Description 2 - диагональ в дюймах
 
