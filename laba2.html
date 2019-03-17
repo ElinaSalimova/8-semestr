@@ -289,7 +289,8 @@ dim(DT.import)            # размерность таблицы</code></pre>
 <div id="-------" class="section level1">
 <h1>Фильтруем данные и добавляем поставки, отсеиваем нулевые значения</h1>
 <p>Берем только данные по месяцам за 2013 год.</p>
-<pre class="r"><code>DT.import &lt;- data.table(filter(DT.import, startsWith(Period, &quot;2013&quot;)))
+<pre class="r"><code># фильтр ----
+DT.import &lt;- data.table(filter(DT.import, startsWith(Period, &quot;2013&quot;)))
 
 # сколько NA в каждом из оставшихся столбцов?
 na.num &lt;- apply(DT.import, 2, function(x) length(which(is.na(x))))
@@ -382,23 +383,12 @@ cls &lt;- palette(rainbow(2))
 # КОРОБЧАТАЯ ДИАГРАММА
 # ящики с усами по месяцам
 png('Pic-01.png', width = 500, height = 500)
-par(mfrow=c(1,2))
-boxplot(DT.import1$Netweight.kg ~ as.factor(DT.import1$Period.Desc), data=DT.import1,
-        xlab = 'Месяц',
+boxplot(res1$Netweight.kg ~ as.factor(res1$country_factor) * as.factor(res1$Period.Desc),
+        xlab = 'Год и группа стран',
         ylab = 'Суммарные поставки',
-        main = 'пакет base Embargo',
-        col = cls[1]
-        
+        main = 'пакет base'
 )
 
-
-
-boxplot(DT.import2$Netweight.kg ~ as.factor(DT.import2$Period.Desc), data=DT.import2,
-        xlab = 'Месяц',
-        ylab = 'Суммарные поставки',
-        main = 'пакет base ROTW',
-        col = cls[2]
-)
 dev.off()</code></pre>
 <pre><code>## png 
 ##   2</code></pre>
@@ -407,14 +397,11 @@ dev.off()</code></pre>
 <h1>Пакет lattice</h1>
 <p>Построим вторую коробчатую диаграмму, используя пакет lattice.</p>
 <pre class="r"><code># Пакет &quot;lattice&quot; ----
-# Коробки по группам
+# КОРОБКИ ПО ГРУППАМ
 png('Pic-02.png', width = 500, height = 500)
-bwplot(res1$Netweight.kg ~ as.factor(res1$Period.Desc) | res1$country_factor, data=res1,
-       xlab = 'Месяц',
-       ylab = 'Суммарные поставки',
-       main = 'пакет lattice',
-       scales=list(x=list(rot=90))
-       
+bwplot( ~ Netweight.kg| as.factor(Period.Desc) * as.factor(country_factor), data = res1,
+        xlab = 'Суммарные поставки',
+        main = 'пакет lattice'
 )
 
 dev.off()</code></pre>
@@ -424,8 +411,7 @@ dev.off()</code></pre>
 <div id="-ggplot2" class="section level1">
 <h1>Пакет ggplot2</h1>
 <p>Построим третью коробчатую диаграмму, используя пакет ggplot2.</p>
-<pre class="r"><code># Пакет &quot;ggplot2&quot; ----
-# КОРОБКИ ПО ГРУППАМ (ЦВЕТ + ОСЬ)
+<pre class="r"><code># КОРОБКИ ПО ГРУППАМ (ЦВЕТ + ОСЬ)
 # всё, что зависит от значений данных, заносим в аргумент aes
 png('Pic-03.png', width = 500, height = 500)
 gp &lt;- ggplot(data = res1, aes(x = as.factor(res1$Period.Desc),

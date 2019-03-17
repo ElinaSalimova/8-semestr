@@ -1,21 +1,3 @@
----
-title: "laba2"
-author: "Салимова Э.И."
-date: '12 марта 2019 г '
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## Лабораторная работа №2
-
-В лабароторной работе нам необходимо построить коробчатые диаграммы (тремя способами) суммарной массы поставок в 2013 году по месяцам. Цветом показать 2 группы стран поставщиков: страны, попавшие под эмбарго в 2014 году, и остальные.
-
-# Загрузка пакетов и файла
-
-```{r}
 # загрузка пакетов ----
 library('dplyr')
 library('data.table')          # работаем с объектами "таблица данных"
@@ -54,13 +36,7 @@ DT.import          # удобный просмотр объекта data.table
 unique(DT.import$Reporter)
 unique(DT.import$Period)
 DT.import$Period <- as.character(DT.import$Period)
-```
 
-# Фильтруем данные и добавляем поставки, отсеиваем нулевые значения
-
-Берем только данные по месяцам за 2013 год.
-
-```{r}
 # фильтр ----
 DT.import <- data.table(filter(DT.import, startsWith(Period, "2013")))
 
@@ -79,13 +55,7 @@ fit <- lm(y ~ x)
 NAs <- x[is.na(y)]
 y[is.na(y)] <- predict(fit, newdata = data.frame(x = NAs))
 head(DT.import)
-```
 
-# Формируем новые data.table() с учетом групп стран
-
-Формирование групп стран эмбарго(2014) и остальных.
-
-```{r}
 #Эмбарго 2014
 Embargo <- c("Lithuania", "Ukraine", "EU-27", "Russian Federation")
 #Остальные страны
@@ -111,14 +81,9 @@ res1 <- na.omit(res)
 
 #фактор по 2 группам стран
 years <- as.factor(unique(res1$country_factor))
-```
 
-# Пакет base
-
-Построим первую коробчатую диаграмму, используя пакет base.
-
-```{r}
 # Пакет "base" ----
+
 #нужна палитра из 2 цветов
 cls <- palette(rainbow(2))
 
@@ -132,13 +97,7 @@ boxplot(res1$Netweight.kg ~ as.factor(res1$country_factor) * as.factor(res1$Peri
 )
 
 dev.off()
-```
 
-# Пакет lattice
-
-Построим вторую коробчатую диаграмму, используя пакет lattice.
-
-```{r}
 # Пакет "lattice" ----
 # КОРОБКИ ПО ГРУППАМ
 png('Pic-02.png', width = 500, height = 500)
@@ -148,13 +107,9 @@ bwplot( ~ Netweight.kg| as.factor(Period.Desc) * as.factor(country_factor), data
 )
 
 dev.off()
-```
 
-# Пакет ggplot2
+# Пакет "ggplot2" ----
 
-Построим третью коробчатую диаграмму, используя пакет ggplot2.
-
-```{r}
 # КОРОБКИ ПО ГРУППАМ (ЦВЕТ + ОСЬ)
 # всё, что зависит от значений данных, заносим в аргумент aes
 png('Pic-03.png', width = 500, height = 500)
@@ -167,5 +122,5 @@ gp <- gp + geom_boxplot()
 gp <- gp + xlab('Месяц')
 gp <- gp + ylab('Суммарные поставки') + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 gp
+
 dev.off()
-```
