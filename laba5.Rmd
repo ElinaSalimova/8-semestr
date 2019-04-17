@@ -1,0 +1,54 @@
+---
+title: "Лабораторная работа 5"
+author: "Салимова Элина"
+date: '10 апреля 2019 г '
+output: html_document
+output:
+  html_document:
+    self_contained: yes
+   
+```{r setup, warning = F, message = F}
+# загрузка пакетов
+library('data.table')
+library('WDI')
+library('leaflet')
+# devtools::install_github('mages/googleVis')
+suppressPackageStartupMessages(library('googleVis'))
+
+# для загрузки свежей версии pandoc:
+#  https://github.com/pandoc-extras/pandoc-nightly/releases/tag/hash-7c20fab3
+#  архив pandoc-windows-7c20fab3.zip распаковать в RStudio/bin/pandoc
+```
+## Интерактивная картограмма  
+
+Интерактивная картограмма на данных Всемирного Банка по [Прямые иностранные инвестиции, чистый приток, в текущих ценах (долл. США)](https://data.worldbank.org/indicator/BX.KLT.DINV.CD.WD?end=2015&start=2014&view=chart) за 2010 год.     
+```{r Интерактивная картограмма, results = 'asis', cashe = T}
+
+indicator.code <- 'BX.KLT.DINV.CD.WD'
+DT <- data.table(WDI(indicator = indicator.code, start = 2014, end = 2014))
+
+# все коды стран iso2
+fileURL <- 'https://pkgstore.datahub.io/core/country-list/data_csv/data/d7c9d7cfb42cb69f4422dec222dbbaa8/data_csv.csv'
+all.iso2.country.codes <- read.csv(fileURL, stringsAsFactors = F, 
+                                   na.strings = '.')
+
+# убираем макрорегионы
+DT <- na.omit(DT[iso2c %in% all.iso2.country.codes$Code, ])
+
+# объект: таблица исходных данных
+g.tbl <- gvisTable(data = DT[, -'year'],
+ options = list(width = 300, height = 400))
+# объект: интерактивная карта
+g.chart <- gvisGeoChart(data = DT, 
+                        locationvar = 'iso2c', 
+                        hovervar = 'country',
+                        colorvar = indicator.code, 
+                        options = list(width = 500, 
+                                       height = 400, 
+                                       dataMode = 'regions'))
+# размещаем таблицу и карту на одной панели (слева направо)
+TG <- gvisMerge(g.tbl, g.chart,
+ horizontal = TRUE,
+ tableOptions = 'bgcolor=\"#CCCCCC\" cellspacing=10')
+TG
+```
